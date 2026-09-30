@@ -1,0 +1,1 @@
+streamlit==1.64.0echo pandas==3.0.6echo numpy==2.5.3echo scikit-learn==1.9.1echo joblib==1.6.0echo pyarrow==25.0.1

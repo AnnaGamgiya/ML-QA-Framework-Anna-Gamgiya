@@ -1,0 +1,91 @@
+{
+  "model_name": "Gradient Boosting",
+  "calibration": "isotonic (CalibratedClassifierCV, cv=5)",
+  "trained_at": "2026-07-28T09:46:21",
+  "n_training_rows": 77176,
+  "n_test_rows": 19294,
+  "target": "is_late",
+  "positive_class_rate": 0.08112366538820359,
+  "decision_threshold": 0.155,
+  "cost_ratio": 5,
+  "numeric_features": [
+    "estimated_delivery_days",
+    "distance_km",
+    "customer_lat",
+    "customer_lng",
+    "seller_lat",
+    "seller_lng",
+    "same_state",
+    "is_sao_paulo_seller",
+    "total_price",
+    "total_freight",
+    "freight_ratio",
+    "price_per_item",
+    "freight_per_kg",
+    "total_payment_value",
+    "max_installments",
+    "n_payment_methods",
+    "n_items",
+    "n_distinct_products",
+    "n_sellers",
+    "multi_seller_order",
+    "total_weight_g",
+    "max_volume_cm3",
+    "weight_per_item_g",
+    "avg_photos_qty",
+    "avg_description_len",
+    "purchase_month",
+    "purchase_day_of_week",
+    "purchase_hour",
+    "purchase_week_of_year",
+    "purchase_is_weekend"
+  ],
+  "categorical_features": [
+    "customer_state",
+    "seller_state",
+    "primary_category",
+    "payment_type"
+  ],
+  "test_metrics_shipped": {
+    "Accuracy": 0.8634,
+    "Precision": 0.3045,
+    "Recall": 0.5323,
+    "F1": 0.3874,
+    "ROC-AUC": 0.8101,
+    "PR-AUC": 0.3354,
+    "Brier": 0.0633
+  },
+  "all_models": {
+    "Logistic Regression": {
+      "Accuracy": 0.6568,
+      "Precision": 0.1442,
+      "Recall": 0.655,
+      "F1": 0.2364,
+      "ROC-AUC": 0.7097,
+      "PR-AUC": 0.1835
+    },
+    "Random Forest": {
+      "Accuracy": 0.8445,
+      "Precision": 0.2728,
+      "Recall": 0.5508,
+      "F1": 0.3649,
+      "ROC-AUC": 0.7994,
+      "PR-AUC": 0.3302
+    },
+    "Gradient Boosting": {
+      "Accuracy": 0.7766,
+      "Precision": 0.2193,
+      "Recall": 0.6856,
+      "F1": 0.3324,
+      "ROC-AUC": 0.8099,
+      "PR-AUC": 0.3355
+    }
+  },
+  "library_versions": {
+    "scikit-learn": "1.9.0",
+    "pandas": "3.0.5",
+    "numpy": "2.4.6"
+  },
+  "registered_from": "mlops/train.py",
+  "dataset_repo": "samuelalex37/olist-delivery-risk-data"
+}
