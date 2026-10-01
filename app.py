@@ -1458,42 +1458,67 @@ def render_environment_details(
         )
 
 
+def _missing_features_from_result(result: ValidationResult) -> list[str]:
+    for assertion in result.assertions:
+        evidence = evidence_of(assertion)
+        missing = evidence.get("отсутствующие_признаки")
+        if isinstance(missing, (list, tuple, set)) and missing:
+            return [str(item) for item in missing]
+
+        message = evidence.get("сообщение_исключения")
+        if not message:
+            continue
+
+        text = str(message)
+        marker = "columns are missing:"
+        if marker not in text:
+            continue
+
+        raw = text.split(marker, 1)[1].strip()
+        if raw.startswith("{") and raw.endswith("}"):
+            raw = raw[1:-1]
+
+        names = [
+            item.strip().strip("'\"")
+            for item in raw.split(",")
+            if item.strip().strip("'\"")
+        ]
+        if names:
+            return names
+
+    return []
+
+
+def _reason_for_ui(result: ValidationResult) -> str:
+    missing = _missing_features_from_result(result)
+    if len(missing) == 1:
+        return f"В тестовом датасете отсутствует признак {missing[0]}."
+    if len(missing) > 1:
+        return "В тестовом датасете отсутствуют признаки: " + ", ".join(missing) + "."
+
+    reasons = []
+    for assertion in result.assertions:
+        if assertion.status != CheckStatus.PASS and assertion.reason:
+            reason = str(assertion.reason).strip()
+            if reason and reason not in reasons:
+                reasons.append(reason)
+
+    if reasons:
+        return " ".join(reasons)
+
+    return result.reason or "Причина не указана."
+
+
 def render_technical_details(
     result: ValidationResult,
 ) -> None:
-    renderers = {
-        "input_data": (
-            render_input_data_details
-        ),
-        "prediction_execution": (
-            render_prediction_execution_details
-        ),
-        "prediction_output": (
-            render_prediction_output_details
-        ),
-        "documented_metrics": (
-            render_documented_metrics_details
-        ),
-        "environment_compatibility": (
-            render_environment_details
-        ),
-    }
+    render_fact("Источник требования", result.requirement_source)
 
-    renderer = renderers.get(
-        result.check_id
-    )
-
-    if renderer is None:
-        st.write(
-            "Для этой проверки нет "
-            "представления технических деталей."
-        )
+    if result.status == CheckStatus.PASS:
         return
 
-    renderer(
-        result
-    )
-
+    render_fact("Тест", STATUS_LABELS[result.status].lower())
+    render_fact("Причина", _reason_for_ui(result))
 
 def render_result(
     result: ValidationResult,
